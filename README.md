@@ -24,8 +24,8 @@ All in all it took about 6 hours to get it working by imitating the FASTbuilds o
 
 # Motivation
 I used cmake before, but I didn't find a way to easily specify this kind of project structure. I found cmake to be confusing.
-Biggest motivation was that it has linux support now so I kind of wanted to do a hello world to see how complex this is.
-Added benefit of course is the advertised build speeds that I have yet to compare. But as far as I'm concerned, this sample is, more or less, final.
+Biggest motivation was that FASTbuild has linux support now so I kind of wanted to do a hello world to see how complex it is.
+Added benefit of course is the advertised build speeds that I have yet to experience. But as far as I'm concerned, this sample is, more or less, final.
 If you want to add more platforms/compilers, I highly recommend on downloading the FASTbuild source and look its configs.
 They were good tutorial material and provide a nice base structure on which to build on. Without that base, this wouldn't have been so trivial.
 
