@@ -1,0 +1,94 @@
+// FBuildApp
+//------------------------------------------------------------------------------
+{
+	.ProjectName		= 'App'
+	.ProjectPath		= 'app'
+
+	// Visual Studio Project Generation
+	//--------------------------------------------------------------------------
+	VCXProject( '$ProjectName$-proj' )
+	{
+		.ProjectOutput				= '$ProjectPath$\$ProjectName$.vcxproj'
+		.ProjectInputPaths			= '$ProjectPath$\'
+		.ProjectBasePath			= '$ProjectPath$\'
+
+		.LocalDebuggerCommand		= '^$(SolutionDir)..\bin\^$(Configuration)\App\App.exe'
+		.LocalDebuggerWorkingDirectory = '^$(SolutionDir)..\'
+	}
+
+    // Unity
+    //--------------------------------------------------------------------------
+    {
+        // Common options
+        .UnityInputPath             = '$ProjectPath$\'
+        .UnityOutputPath            = '$OutputBase$\Unity\$ProjectPath$\'
+
+        // Windows
+        Unity( '$ProjectName$-Unity-Windows' )
+        {
+        }
+    }       
+
+	// Windows (MSVC)
+	//--------------------------------------------------------------------------
+	ForEach( .Config in .Configs_Windows_MSVC )
+	{
+		Using( .Config )
+		.OutputBase + '\$Platform$-$Config$'
+
+		// Static Library
+		Library( '$ProjectName$-Lib-$Platform$-$Config$' )
+		{
+			// Input (Unity)
+			.CompilerInputUnity			= '$ProjectName$-Unity-Windows'
+
+			// Output
+			.CompilerOutputPath			= '$OutputBase$\$ProjectName$\'
+ 			.LibrarianOutput 			= '$OutputBase$\$ProjectName$\$ProjectName$.lib'
+		}
+
+		// Executable
+		Executable( '$ProjectName$-Exe-$Platform$-$Config$' )
+		{
+			.Libraries					= {
+                                            'App-Lib-$Platform$-$Config$',
+                                            'core-Lib-$Platform$-$Config$'
+                                           }
+			.LinkerOutput				= '$OutputBase$\App\App.exe'
+			.LinkerOptions				+ ' /SUBSYSTEM:CONSOLE'
+                                        + ' libcmt.lib'
+                                        + ' libucrt.lib'
+                                        + ' libvcruntime.lib'
+                                        + ' kernel32.lib'
+                                        + ' user32.lib'
+                                        + ' gdi32.lib'
+                                        + ' winspool.lib'
+                                        + ' comdlg32.lib'
+                                        + ' advapi32.lib'
+                                        + ' shell32.lib'
+                                        + ' ole32.lib'
+                                        + ' oleaut32.lib'
+                                        + ' uuid.lib'
+                                        + ' odbc32.lib'
+                                        + ' odbccp32.lib'
+		}
+		Alias( '$ProjectName$-$Platform$-$Config$' ) { .Targets = '$ProjectName$-Exe-$Platform$-$Config$' }
+	}
+
+	// Aliases
+	//--------------------------------------------------------------------------
+	// Per-Config
+	Alias( '$ProjectName$-Debug' )		{ .Targets = { '$ProjectName$-X64-Debug'} }
+	Alias( '$ProjectName$-Profile' )	{ .Targets = { '$ProjectName$-X64-Profile' } }
+	Alias( '$ProjectName$-Release' )	{ .Targets = { '$ProjectName$-X64-Release' } }
+
+	// Per-Platform
+	Alias( '$ProjectName$-X64' )		{ .Targets = { '$ProjectName$-X64-Debug', '$ProjectName$-X64-Release', '$ProjectName$-X64-Profile' } }
+
+
+	// All
+	Alias( '$ProjectName$' )
+	{
+		.Targets = { '$ProjectName$-Debug', '$ProjectName$-Profile', '$ProjectName$-Release' }
+	}
+}
